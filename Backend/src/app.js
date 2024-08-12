@@ -2,6 +2,7 @@ import cors from "cors";
 import express from "express";
 import cookieParser from "cookie-parser";
 import userRouter from "./routes/userRoutes.js";
+import { errorHandler } from "./utils/ApiError.js";
 const app = express();
 app.use(
   cors({
@@ -9,7 +10,7 @@ app.use(
     credentials: true,
   })
 );
-
+app.use(errorHandler);
 app.use(express.json());
 app.use(cookieParser());
 

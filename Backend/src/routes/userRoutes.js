@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { verifyJWT } from "../middlewares/authMiddleware.js";
 import { upload } from "../middlewares/multerMiddleware.js";
+
 import {
   loginUser,
   logoutUser,

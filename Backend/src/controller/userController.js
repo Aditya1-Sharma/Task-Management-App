@@ -1,7 +1,9 @@
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { Users } from "../Models/userModel.js";
-import ApiError from "../utils/ApiError.js";
+import { ApiError, errorHandler } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
+import { uploadOnCloudinary } from "../utils/cloudinary.js";
+import fs from "fs/promises";
 
 const generateAccessTokens = async (userId) => {
   try {
@@ -17,7 +19,7 @@ const generateAccessTokens = async (userId) => {
 };
 
 export const registerUser = asyncHandler(async (req, res) => {
-  // get the user details from the frontend
+  // get the user details from the frontendsf
   // VAlidation not empty
   // check if user already exists
 
@@ -29,13 +31,45 @@ export const registerUser = asyncHandler(async (req, res) => {
   }
 
   const existedUser = await Users.findOne({ $or: [{ userName }, { email }] });
-  if (existedUser)
+  if (existedUser) {
+    if (req.files?.avatar?.[0]?.path)
+      await fs.unlink(req.files?.avatar?.[0]?.path);
+    if (req.files?.coverImage?.[0]?.path)
+      await fs.unlink(req.files?.coverImage?.[0]?.path);
+
     throw new ApiError(409, "User with this email and userName alredy exists");
+
+    // res
+    //   .status(500)
+    //   .json(
+    //     new ApiError(408, "User with this email and userName alredy exists")
+    //   );
+  }
+  console.log("How i can reach here if their was a error");
+
+  const avatarLocalPath = req.files?.avatar?.[0]?.path;
+  console.log(avatarLocalPath);
+  let coverImageLocalPath = req.files?.coverImage?.[0]?.path;
+
+  if (!avatarLocalPath) {
+    throw new ApiError(400, "Avatar file is required");
+  }
+
+  const avatar = await uploadOnCloudinary(avatarLocalPath);
+  const coverImage = await uploadOnCloudinary(coverImageLocalPath);
+
+  // console.table(avatar, coverImage);
+
+  if (!avatar) {
+    throw new ApiError(400, "Avatar file is required");
+  }
 
   const user = await Users.create({
     userName: userName.toLowerCase(),
     email,
     password,
+    avatar: avatar?.url || "",
+    coverImage: coverImage?.url || "",
   });
   const createdUser = await Users.findById(user._id).select("-password");
   if (!createdUser)
