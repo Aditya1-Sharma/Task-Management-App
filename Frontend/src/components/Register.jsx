@@ -29,7 +29,6 @@ const Register = () => {
           },
         }
       );
-
       if (response.data.success) {
         console.log("User registered successfully:", response.data.user);
         reset();
@@ -41,7 +40,7 @@ const Register = () => {
     } catch (error) {
       if (error.response.status === 409) {
         console.error("Error registering user:", error);
-        setErrors("User with this email or userName alredy exists");
+        setErrors(error.response.data.message);
       }
       throw new Error(error.response.message);
     }

@@ -1,11 +1,13 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import "../style.css";
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
+import { userContext } from "../contexts/UserContexts";
 
 const Login = () => {
   const { register, handleSubmit, reset } = useForm();
+  const loggedInData = useContext(userContext);
   const [errors, setErrors] = useState("");
   const navigate = useNavigate();
 
@@ -21,6 +23,14 @@ const Login = () => {
 
       if (response.data.success) {
         console.log("User logged in successfully:", response.data.user);
+        console.log(response);
+
+        if (response.data.data.accessToken) {
+          localStorage.setItem(
+            "Task",
+            JSON.stringify(response.data.data.accessToken)
+          );
+        }
         reset();
         navigate("/dashboard"); // Redirect to the dashboard or home page on success
       } else {
@@ -28,7 +38,7 @@ const Login = () => {
       }
     } catch (error) {
       console.error("Error logging in user:", error);
-      setErrors("Invalid email or password. Please try again.");
+      setErrors(error.response.data.message);
     }
   };
 
@@ -65,3 +75,5 @@ const Login = () => {
 };
 
 export default Login;
+
+// adi@adi1.com

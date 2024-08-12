@@ -48,7 +48,6 @@ const errorHandler = (err, req, res, next) => {
       message: "An unexpected error occurred",
     });
   }
-  next();
 };
 
 export { ApiError, errorHandler };
