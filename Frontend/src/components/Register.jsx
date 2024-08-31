@@ -42,7 +42,6 @@ const Register = () => {
         console.error("Error registering user:", error);
         setErrors(error.response.data.message);
       }
-      throw new Error(error.response.message);
     }
   };
 

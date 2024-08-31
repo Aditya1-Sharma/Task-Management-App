@@ -7,7 +7,8 @@ import { userContext } from "../contexts/UserContexts";
 
 const Login = () => {
   const { register, handleSubmit, reset } = useForm();
-  const loggedInData = useContext(userContext);
+  const loginContext = useContext(userContext);
+  const { loggedUser, setloggedUser } = loginContext;
   const [errors, setErrors] = useState("");
   const navigate = useNavigate();
 
@@ -26,10 +27,9 @@ const Login = () => {
         console.log(response);
 
         if (response.data.data.accessToken) {
-          localStorage.setItem(
-            "Task",
-            JSON.stringify(response.data.data.accessToken)
-          );
+          const accessToken = JSON.stringify(response.data.data.accessToken);
+          localStorage.setItem("Task", accessToken);
+          setloggedUser(accessToken);
         }
         reset();
         navigate("/dashboard"); // Redirect to the dashboard or home page on success

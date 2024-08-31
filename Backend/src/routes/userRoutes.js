@@ -13,6 +13,11 @@ import {
   getAllTask,
   updateTask,
 } from "../controller/taskController.js";
+import {
+  generateShortURL,
+  getAnalytics,
+  redirectURL,
+} from "../controller/urlController.js";
 
 const router = Router();
 
@@ -38,4 +43,11 @@ router.route("/update/:taskId").put(verifyJWT, updateTask);
 router.route("/getAllTask").get(verifyJWT, getAllTask);
 router.route("/deleteTask/:taskId").delete(verifyJWT, deleteTask);
 
+// Routes for url shortner
+
+router.route("/url").post(verifyJWT, generateShortURL);
+
+router.route("/url/:shortId").get(verifyJWT, redirectURL);
+
+router.route("/url/ana/:shortId").get(verifyJWT, getAnalytics);
 export default router;

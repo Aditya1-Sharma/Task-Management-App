@@ -6,14 +6,14 @@ import RegisterPage from "./pages/RegisterPage";
 import LoginPage from "./pages/LoginPage";
 import NotFound from "./pages/NotFound";
 import Dashbord from "./components/Dashbord";
+import Private from "./components/Private";
 
 function App() {
-  const [loggedUser, setloggedUser] = useState(
-    JSON.parse(localStorage.getItem("Task"))
-  );
+  const [loggedUser, setloggedUser] = useState(null);
   useEffect(() => {
-    console.log(loggedUser);
-  }, []);
+    console.log({ loggedUser });
+    setloggedUser(JSON.parse(localStorage.getItem("Task")));
+  }, [loggedUser]);
   return (
     <>
       <h1>Task Management App</h1>
@@ -23,7 +23,9 @@ function App() {
           <Route path="/register" element={<RegisterPage />}></Route>
 
           <Route path="/login" element={<LoginPage />}></Route>
-          <Route path="/dashboard" element={<Dashbord />}></Route>
+          <Route
+            path="/dashboard"
+            element={<Private Component={Dashbord} />}></Route>
           <Route path="*" element={<NotFound />}></Route>
         </Routes>
       </userContext.Provider>

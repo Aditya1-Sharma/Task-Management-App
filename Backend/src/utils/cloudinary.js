@@ -17,14 +17,16 @@ export const uploadOnCloudinary = async (localFilePath) => {
       folder: "your-folder-name",
     });
 
-    await fs.unlink(localFilePath);
+    // await fs.unlink(localFilePath);
     return {
       url: uploadResult?.url,
     };
   } catch (error) {
     console.error(error);
 
-    await fs.unlink(localFilePath); // remove the locally saved temporary file as the upload operation got failed
+    // await fs.unlink(localFilePath); // remove the locally saved temporary file as the upload operation got failed
     throw new Error("Failed to upload file");
+  } finally {
+    await fs.unlink(localFilePath);
   }
 };
