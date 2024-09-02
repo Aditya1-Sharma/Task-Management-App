@@ -46,7 +46,7 @@ const Register = () => {
   };
 
   return (
-    <div className="register-container">
+    <div className="register-container mt-20 max-w-96">
       <h2>Register</h2>
       {errors && <p className="error-message">{errors}</p>}
       <form onSubmit={handleSubmit(onSubmit)}>

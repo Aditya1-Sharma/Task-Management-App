@@ -45,9 +45,9 @@ router.route("/deleteTask/:taskId").delete(verifyJWT, deleteTask);
 
 // Routes for url shortner
 
-router.route("/url").post(verifyJWT, generateShortURL);
+router.route("/url").post(generateShortURL);
 
-router.route("/url/:shortId").get(verifyJWT, redirectURL);
+router.route("/url/:shortId").get(redirectURL);
 
 router.route("/url/ana/:shortId").get(verifyJWT, getAnalytics);
 export default router;
