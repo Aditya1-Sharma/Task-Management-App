@@ -1,5 +1,3 @@
-import React, { useEffect, useContext } from "react";
-import { useNavigate, Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Card from "./Card";
 import Task from "./Task";
@@ -7,6 +5,7 @@ import { fetchUserData } from "../redux/user/userSlice";
 function Dashbord() {
   const { currentUser, error, loading } = useSelector((state) => state.user);
   const { tasks } = useSelector((state) => state.user);
+
   console.log(tasks);
 
   return (

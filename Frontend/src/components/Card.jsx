@@ -1,8 +1,9 @@
 import React from "react";
 
 import axios from "axios";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Task from "./Task";
+import { deleteTask } from "../redux/user/userSlice.js";
 const Card = ({
   id,
   title = "Selena Gomez",
@@ -42,6 +43,7 @@ const Card = ({
   };
 
   const { tasks } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
 
   const UpdateTask = async (e) => {
     try {
@@ -64,9 +66,9 @@ const Card = ({
     }
   };
 
-  const deleteTask = async (e) => {
-    console.log(id);
-    const response = await axios.delete("");
+  const deleteTask1 = async (e) => {
+    const res = dispatch(deleteTask(id));
+    console.log();
   };
 
   return (
@@ -109,7 +111,7 @@ const Card = ({
         </button>
         <button
           className="px-2 py-2 bg-blue-500 text-white rounded-md"
-          onClick={deleteTask}>
+          onClick={deleteTask1}>
           Delete
         </button>
       </div>
@@ -118,5 +120,3 @@ const Card = ({
 };
 
 export default Card;
-
-//  status: ["To-Do", "In Progress", "Under Review", "Completed"]

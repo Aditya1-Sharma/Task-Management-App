@@ -23,6 +23,8 @@ function classNames(...classes) {
 
 export default function Navbar() {
   const { currentUser, loading, error } = useSelector((state) => state.user);
+  console.log(currentUser);
+
   const navigate = useNavigate();
   const logout = async () => {
     try {

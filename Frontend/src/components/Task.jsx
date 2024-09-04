@@ -4,21 +4,26 @@ import React, {
   useRef,
   forwardRef,
   useImperativeHandle,
+  useEffect,
 } from "react";
 import { userContext } from "../contexts/UserContexts";
 import { useForm } from "react-hook-form";
 import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { createTask } from "../redux/user/userSlice";
 
 const Task = forwardRef(
-  (
-    { title = "Selena", description = "", status = "To-Do", priority = "High" },
-    ref
-  ) => {
+  ({ title = "Ariana", description, status, priority }, ref) => {
+    const { tasks } = useSelector((state) => state.user);
+    console.log(tasks);
+
+    // if (!title && !description && !status && !priority) return null;
     const [isOpen, setIsOpen] = useState(false);
     const { register, handleSubmit, reset } = useForm();
     const [errors, setErrors] = useState("");
 
     const loggedData = useContext(userContext);
+    const dispatch = useDispatch();
 
     const togglePopup = () => {
       setIsOpen(!isOpen);
@@ -31,28 +36,15 @@ const Task = forwardRef(
     }));
 
     const onSubmit = async (formData) => {
-      try {
-        const response = await axios.post(
-          "http://localhost:8000/api/v1/user/create",
-          {
-            title: formData.title,
-            description: formData.description,
-            status: formData.status,
-            priority: formData.priority,
-          },
-          {
-            withCredentials: true,
+      await dispatch(createTask(formData))
+        .unwrap()
+        .then((res) => {
+          if (!res.error) {
+            console.log("Task Created");
+          } else {
+            console.error("Erorr creating task", res.error);
           }
-        );
-        if (response.data.success) {
-          console.log("Task Created successfully");
-          reset();
-        } else {
-          setErrors(response.data.message);
-        }
-      } catch (error) {
-        console.log("Error Creating task", error);
-      }
+        });
     };
 
     return (

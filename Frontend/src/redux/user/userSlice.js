@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import { act } from "react";
 
 const initialState = {
   currentUser: null,
@@ -21,6 +22,39 @@ export const fetchUserData = createAsyncThunk(
       );
       console.log(response.data.data);
 
+      return response.data.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const deleteTask = createAsyncThunk(
+  "user/deleteTask",
+  async (taskId, { rejectWithValue }) => {
+    try {
+      const response = await axios.delete(
+        `http://localhost:8000/api/v1/user/deleteTask/${taskId}`,
+        { withCredentials: true }
+      );
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const createTask = createAsyncThunk(
+  "user/createTask",
+  async (taskData, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:8000/api/v1/user/create",
+        taskData,
+        {
+          withCredentials: true,
+        }
+      );
       return response.data.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -56,6 +90,29 @@ const userSlice = createSlice({
       state.error = action.payload;
       state.loading = false;
     },
+    deleteTaskStart: (state) => {
+      state.loading = true;
+    },
+    deleteTaskSuccess: (state, action) => {
+      state.currentUser = action.payload;
+      state.error = null;
+      state.loading = false;
+    },
+    deleteTaskFailure: (state) => {
+      state.error = action.payload;
+      state.loading = false;
+    },
+    createTaskStart: (state) => {
+      state.loading = true;
+    },
+    createTaskSuccess: (state, action) => {
+      state.currentUser = action.payload;
+      state.error = false;
+      state.loading = false;
+    },
+    createTaskFailure: (state) => {
+      (state.error = action.payload), (state.loading = false);
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -71,6 +128,34 @@ const userSlice = createSlice({
         state.error = action.payload;
         state.loading = false;
       });
+
+    builder
+      .addCase(deleteTask.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(deleteTask.fulfilled, (state, action) => {
+        state.tasks = state.tasks.filter(
+          (task) => task._id !== action.meta.arg
+        ); // Remove the deleted task from the state
+        state.loading = false;
+        state.error = null;
+      })
+      .addCase(deleteTask.rejected, (state, action) => {
+        state.error = action.payload;
+        state.loading = false;
+      })
+      .addCase(createTask.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(createTask.fulfilled, (state, action) => {
+        state.tasks.push(action.payload); // Added the new  task into the state
+        state.loading = false;
+        state.error = null;
+      })
+      .addCase(createTask.rejected, (state, action) => {
+        state.error = action.payload;
+        state.loading = false;
+      });
   },
 });
 
@@ -81,6 +166,12 @@ export const {
   taskStart,
   taskSuccess,
   taskFailure,
+  deleteTaskStart,
+  deleteTaskSuccess,
+  deleteTaskFailure,
+  createTaskStart,
+  createTaskSuccess,
+  createTaskFailure,
 } = userSlice.actions;
 
 export default userSlice.reducer;
