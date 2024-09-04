@@ -8,6 +8,7 @@ export const createtask = asyncHandler(async (req, res) => {
   const userId = req.user?._id;
   const task = req.body;
   task.userId = userId;
+
   console.log(task);
   const array = [title, status];
   if (array.some((item) => item.trim() === ""))
@@ -20,9 +21,19 @@ export const createtask = asyncHandler(async (req, res) => {
       {
         taskCreated,
       },
-      "User logged in successfully"
+      "Task created successfully"
     )
   );
+});
+
+export const getTask = asyncHandler(async (req, res) => {
+  const { taskId } = req.params;
+  if (!taskId) throw new ApiError(402, "Task Id must be passed");
+  const task = await tasks.findById(taskId);
+
+  if (!task) throw new ApiError(404, "Task not found on specific id");
+
+  return res.status(200).json(new ApiResponse(200, task, "Task Found"));
 });
 
 export const updateTask = asyncHandler(async (req, res) => {

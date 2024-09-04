@@ -1,7 +1,14 @@
 import React from "react";
+import Navbar from "../components/Navbar";
+import UrlShortner from "../components/UrlShortner";
 
 function UrlShortnerPage() {
-  return <div>UrlShortnerPage</div>;
+  return (
+    <>
+      <Navbar />
+      <UrlShortner />
+    </>
+  );
 }
 
 export default UrlShortnerPage;

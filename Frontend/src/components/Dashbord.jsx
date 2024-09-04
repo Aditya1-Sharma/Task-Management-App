@@ -1,11 +1,17 @@
 import React, { useEffect, useContext } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import Card from "./Card";
+import Task from "./Task";
+import { fetchUserData } from "../redux/user/userSlice";
 function Dashbord() {
   const { currentUser, error, loading } = useSelector((state) => state.user);
+  const { tasks } = useSelector((state) => state.user);
+  console.log(tasks);
+
   return (
-    <div className="max-w-full max-h-full bg-red-400 md:mx-10">
-      <div className="flex h-screen">
+    <div className="max-w-fit max-h-full bg-red-400 md:mx-10">
+      <div className="flex h-auto">
         {/* First Div (2/5ths of the width) */}
 
         <div className="w-2/5 p-4 bg-blue-100  md:block">
@@ -19,10 +25,8 @@ function Dashbord() {
             <p className="p-2 text-center">{currentUser.data.user.userName}</p>
             <p className="text-center">{currentUser.data.user.email}</p>
           </span>
-          <div className="flex justify-center">
-            <button className="w-2/3 bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 rounded-lg transition duration-300 mt-4">
-              Create Task
-            </button>
+          <div className="flex justify-center mt-4">
+            <Task />
           </div>
         </div>
 
@@ -45,8 +49,27 @@ function Dashbord() {
             <div className="h-px bg-purple-700"></div>
 
             {/* Second Div (2/6ths of the height) */}
-            <div className="h-full max-w-full bg-green-300">
+            <div className="  h-full max-w-full bg-green-300">
               <p>Second Div</p>
+              <div className="grid gap-2 grid-cols-1 sm:grid-cols-3">
+                {/* title = "Selena Gomez",
+                    description = "Americal Singer",
+                    status = "To-Do",
+                    priority,
+                    deadline, */}
+                {tasks &&
+                  tasks.map((item) => (
+                    <div key={item._id}>
+                      <Card
+                        title={item.title}
+                        description={item.description}
+                        status={item.status}
+                        priority={item.priority}
+                        id={item._id}
+                      />
+                    </div>
+                  ))}
+              </div>
             </div>
           </div>
         </div>

@@ -7,11 +7,10 @@ import LoginPage from "./pages/LoginPage";
 import NotFound from "./pages/NotFound";
 // import Dashbord from "./components/Dashbord";
 import Private from "./components/Private";
-import UrlShortner from "./components/UrlShortner";
 import Navbar from "./components/Navbar";
 import { Link, useNavigate } from "react-router-dom";
 import DashboardPage from "./pages/DashboardPage";
-import { useSelector } from "react-redux";
+import UrlShortnerPage from "./pages/UrlShortnerPage";
 function App() {
   const navigate = useNavigate();
   const [loggedUser, setloggedUser] = useState(null);
@@ -37,7 +36,7 @@ function App() {
           <Route path="*" element={<NotFound />}></Route>
           <Route
             path="/urlshortner"
-            element={<Private Component={UrlShortner} />}></Route>
+            element={<Private Component={UrlShortnerPage} />}></Route>
           <Route path="/navbar" element={<Navbar />}></Route>
         </Routes>
       </userContext.Provider>

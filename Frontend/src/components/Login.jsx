@@ -1,24 +1,23 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import "../style.css";
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { userContext } from "../contexts/UserContexts";
 import { signInSuccess } from "../redux/user/userSlice";
-
+import { fetchUserData } from "../redux/user/userSlice.js";
 const Login = () => {
+  // useEffect(()=>{
+  //   const response =
+  // },[])
   const navigate = useNavigate();
 
   const { register, handleSubmit, reset } = useForm();
 
-  const { currentUser, loading, error } = useSelector((state) => state.user);
-
   const dispatch = useDispatch();
 
   const { loggedUser, setloggedUser } = useContext(userContext);
-  const [avatar, setAvatar] = useState("");
-  const [coverImage, setCoverImage] = useState("");
   const [errors, setErrors] = useState("");
 
   const onSubmit = async (formData) => {
@@ -28,6 +27,9 @@ const Login = () => {
         {
           email: formData.email,
           password: formData.password,
+        },
+        {
+          withCredentials: true,
         }
       );
 
@@ -39,24 +41,13 @@ const Login = () => {
           const accessToken = JSON.stringify(response.data.data.accessToken);
           localStorage.setItem("Task", accessToken);
           setloggedUser(accessToken);
-          setAvatar(response.data.data.user.avatar);
-          setCoverImage(response.data.data.user.coverImage);
           dispatch(signInSuccess(response.data));
+          dispatch(fetchUserData());
+          console.log("data fetched");
         }
 
         reset();
         navigate("/dashboard"); // Redirect to the dashboard or home page on success
-
-        // Here it starts redux
-
-        // if (response.status === 200) {
-        //   dispatch(signInSuccess(response.data));
-        //   const accessToken = JSON.stringify(response.data.data.accessToken);
-        //   localStorage.setItem("Task", accessToken);
-        //   // setloggedUser(accessToken);
-        // }
-        // reset();
-        // navigate("/dashboard");
       } else {
         setErrors(response.data.message);
       }

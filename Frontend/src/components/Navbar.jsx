@@ -24,30 +24,30 @@ function classNames(...classes) {
 export default function Navbar() {
   const { currentUser, loading, error } = useSelector((state) => state.user);
   const navigate = useNavigate();
-  //   const logout = async () => {
-  //     try {
-  //       const response = await axios.post(
-  //         "http://localhost:8000/api/v1/user/logout",
-  //         {},
-  //         {
-  //           withCredentials: true,
-  //         }
-  //       );
+  const logout = async () => {
+    try {
+      const response = await axios.post(
+        "http://localhost:8000/api/v1/user/logout",
+        {},
+        {
+          withCredentials: true,
+        }
+      );
 
-  //       if (response.status === 200) {
-  //         console.log(response.data.message);
-  //         localStorage.removeItem("Task");
-  //         navigate("/login");
-  //       } else {
-  //         console.error("Logout Failed", response.data.message);
-  //       }
-  //     } catch (error) {
-  //       console.error(
-  //         "An error occurred:",
-  //         error.response ? error.response.data.message : error.message
-  //       );
-  //     }
-  //   };
+      if (response.data.success) {
+        console.log(response.data.message);
+        localStorage.removeItem("Task");
+        navigate("/login");
+      } else {
+        console.error("Logout Failed", response.data.message);
+      }
+    } catch (error) {
+      console.error(
+        "An error occurred:",
+        error.response ? error.response.data.message : error.message
+      );
+    }
+  };
 
   const logoutSample = () => {
     localStorage.removeItem("Task");
@@ -122,10 +122,7 @@ export default function Navbar() {
                   {({ active }) => (
                     <Link
                       to="/login"
-                      onClick={() => {
-                        localStorage.removeItem("Task");
-                        navigate("/login");
-                      }}
+                      onClick={logout}
                       className={classNames(
                         active ? "bg-gray-100" : "",
                         "block px-4 py-2 text-sm text-gray-700"
@@ -143,9 +140,8 @@ export default function Navbar() {
       <DisclosurePanel className="sm:hidden">
         <div className="space-y-1 px-2 pb-3 pt-2">
           {navigation.map((item) => (
-            <Link to={item.href}>
+            <Link to={item.href} key={item.name}>
               <DisclosureButton
-                key={item.name}
                 as="a"
                 href={item.href}
                 className={classNames(

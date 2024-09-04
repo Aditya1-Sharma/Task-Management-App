@@ -11,6 +11,7 @@ import {
   createtask,
   deleteTask,
   getAllTask,
+  getTask,
   updateTask,
 } from "../controller/taskController.js";
 import {
@@ -39,6 +40,7 @@ router.route("/logout").post(verifyJWT, logoutUser);
 
 // Task Routes Started
 router.route("/create").post(verifyJWT, createtask);
+router.route("/getTask/:taskId").get(verifyJWT, getTask);
 router.route("/update/:taskId").put(verifyJWT, updateTask);
 router.route("/getAllTask").get(verifyJWT, getAllTask);
 router.route("/deleteTask/:taskId").delete(verifyJWT, deleteTask);
