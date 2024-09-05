@@ -42,8 +42,6 @@ const Task = forwardRef(
       console.log(isUpdate);
 
       if (isUpdate) {
-        console.log("hello Akansha");
-
         await dispatch(updateTask({ taskData: formData, taskId: id }))
           .unwrap()
           .then((res) => {
