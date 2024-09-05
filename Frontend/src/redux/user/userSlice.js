@@ -55,6 +55,22 @@ export const createTask = createAsyncThunk(
           withCredentials: true,
         }
       );
+      return response.data.data.taskCreated;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const updateTask = createAsyncThunk(
+  "user/updateTask",
+  async ({ taskData, taskId }, { rejectWithValue }) => {
+    try {
+      const response = await axios.put(
+        `http://localhost:8000/api/v1/user/update/${taskId}`,
+        taskData,
+        { withCredentials: true }
+      );
       return response.data.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -113,6 +129,18 @@ const userSlice = createSlice({
     createTaskFailure: (state) => {
       (state.error = action.payload), (state.loading = false);
     },
+    updateTaskStart: (state) => {
+      state.loading = true;
+    },
+    updateTaskSuccess: (state, action) => {
+      state.currentUser = action.payload;
+      state.error = false;
+      state.loading = false;
+    },
+    updateTaskFailure: (state) => {
+      state.error = action.payload;
+      state.loading = false;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -155,6 +183,24 @@ const userSlice = createSlice({
       .addCase(createTask.rejected, (state, action) => {
         state.error = action.payload;
         state.loading = false;
+      })
+      .addCase(updateTask.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(updateTask.fulfilled, (state, action) => {
+        state.loading = false;
+
+        const updatedTask = action.payload;
+        const index = state.tasks.findIndex(
+          (task) => task._id === updatedTask._id
+        );
+        if (index !== -1) {
+          state.tasks[index] = updatedTask;
+        }
+      })
+      .addCase(updateTask.rejected, (state, action) => {
+        state.error = action.payload;
+        state.loading = false;
       });
   },
 });
@@ -172,6 +218,9 @@ export const {
   createTaskStart,
   createTaskSuccess,
   createTaskFailure,
+  updateTaskStart,
+  updateTaskSuccess,
+  updateTaskFailure,
 } = userSlice.actions;
 
 export default userSlice.reducer;

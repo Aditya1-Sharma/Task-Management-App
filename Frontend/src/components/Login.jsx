@@ -47,6 +47,7 @@ const Login = () => {
         }
 
         reset();
+
         navigate("/dashboard"); // Redirect to the dashboard or home page on success
       } else {
         setErrors(response.data.message);

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useSelector } from "react-redux";
 import Card from "./Card";
 import Task from "./Task";
@@ -5,8 +6,14 @@ import { fetchUserData } from "../redux/user/userSlice";
 function Dashbord() {
   const { currentUser, error, loading } = useSelector((state) => state.user);
   const { tasks } = useSelector((state) => state.user);
-
+  const [isOpen, setIsOpen] = useState(false);
   console.log(tasks);
+  const togglePopup = () => {
+    setIsOpen(!isOpen);
+  };
+  const onClose = () => {
+    setIsOpen(false);
+  };
 
   return (
     <div className="max-w-fit max-h-full bg-red-400 md:mx-10">
@@ -25,7 +32,13 @@ function Dashbord() {
             <p className="text-center">{currentUser.data.user.email}</p>
           </span>
           <div className="flex justify-center mt-4">
-            <Task />
+            {isOpen && <Task onClose={onClose} />}
+
+            <button
+              onClick={togglePopup}
+              className="px-4 py-2 bg-blue-500 text-white rounded-md">
+              Create Task
+            </button>
           </div>
         </div>
 
@@ -36,7 +49,7 @@ function Dashbord() {
         <div className="w-full p-4 bg-green-100">
           <div className="flex flex-col h-full">
             {/* First Div (4/6ths of the height) */}
-            <div className="h-2/6 bg-green-100">
+            <div className="h-[50vh] bg-green-100">
               <img
                 src={currentUser.data.user.coverImage}
                 alt=""
