@@ -1,18 +1,11 @@
-import React, {
-  useState,
-  useContext,
-  useRef,
-  forwardRef,
-  useImperativeHandle,
-  useEffect,
-} from "react";
+import React, { useState, useContext, forwardRef } from "react";
 import { userContext } from "../contexts/UserContexts";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { createTask, updateTask } from "../redux/user/userSlice";
 
 const priorities = ["Low", "Medium", "High"];
-const statuses = ["To-do", "In Progress", "Under Review", "Completed"];
+const statuses = ["To-Do", "In Progress", "Under Review", "Completed"];
 const Task = forwardRef(
   (
     {
@@ -29,8 +22,6 @@ const Task = forwardRef(
     const { tasks } = useSelector((state) => state.user);
     // console.log(tasks);
     console.log(id);
-
-    // if (!title && !description && !status && !priority) return null;
 
     const { register, handleSubmit, reset } = useForm();
     const [errors, setErrors] = useState("");

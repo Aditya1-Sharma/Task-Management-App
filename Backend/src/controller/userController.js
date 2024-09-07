@@ -38,14 +38,7 @@ export const registerUser = asyncHandler(async (req, res) => {
       await fs.unlink(req.files?.coverImage?.[0]?.path);
 
     throw new ApiError(409, "User with this email and userName alredy exists");
-
-    // res
-    //   .status(500)
-    //   .json(
-    //     new ApiError(408, "User with this email and userName alredy exists")
-    //   );
   }
-  console.log("How i can reach here if their was a error");
 
   const avatarLocalPath = req.files?.avatar?.[0]?.path;
   console.log(avatarLocalPath);
@@ -95,7 +88,7 @@ export const loginUser = asyncHandler(async (req, res) => {
 
   if (!isPasswordCorrect) throw new ApiError(401, "Invalid user credentials");
   const accessToken = await generateAccessTokens(user._id);
-  console.log(accessToken);
+  // console.log(accessToken);
 
   const loggedInUser = await Users.findById(user._id).select("-password");
   const options = {

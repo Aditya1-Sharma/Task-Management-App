@@ -9,7 +9,7 @@ export const createtask = asyncHandler(async (req, res) => {
   const task = req.body;
   task.userId = userId;
 
-  console.log(task);
+  // console.log(task);
   const array = [title, status];
   if (array.some((item) => item.trim() === ""))
     throw new ApiError(401, "Title and description are mandatory");
@@ -44,10 +44,10 @@ export const updateTask = asyncHandler(async (req, res) => {
     const userId = req.user?._id;
 
     if (!userId) throw new ApiError(404, "User not found");
-    console.table(taskDetails);
+    // console.table(taskDetails);
 
     const task = await tasks.findById(taskId);
-    console.log(task.userId);
+    // console.log(task.userId);
 
     if (!task) {
       throw new ApiError("404", "User hasn't created any task yet");
@@ -65,7 +65,7 @@ export const updateTask = asyncHandler(async (req, res) => {
       .status(200)
       .json(new ApiResponse(200, task, "Task updated successfully"));
   } catch (error) {
-    console.log(error.message);
+    // console.log(error.message);
 
     return res
       .status(500)
@@ -86,7 +86,7 @@ export const getAllTask = asyncHandler(async (req, res) => {
         new ApiResponse(200, tasksDetails, "Suceessfully fetched all items")
       );
   } catch (error) {
-    console.log(error.message);
+    // console.log(error.message);
     res
       .status(500)
       .json(
